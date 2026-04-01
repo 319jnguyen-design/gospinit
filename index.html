@@ -2,12 +2,198 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>gospinit</title>
+    <title>GoSpinIt — Free Wheel Spinner</title>
+    <meta
+      name="description"
+      content="Free online wheel spinner. Paste your names, spin the wheel, pick a winner. Perfect for teachers and streamers."
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Nunito:wght@400;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/src/style.css" />
   </head>
-  <body>
-    <div id="app"></div>
+  <body class="theme-default">
+    <div class="header-outer">
+      <header class="header">
+        <div class="logo">
+          <span class="l1">g</span><span class="l2">o</span
+          ><span class="l3">s</span><span class="l4">p</span
+          ><span class="l5">i</span><span class="l6">n</span
+          ><span class="l7">i</span><span class="l8">t</span>
+        </div>
+        <div class="header-actions">
+          <button class="header-btn" id="customiseBtn">
+            <span class="header-btn-icon">🎨</span> Customise
+          </button>
+          <button class="header-btn" id="shareBtn">
+            <span class="header-btn-icon">
+              <svg
+                width="15"
+                height="15"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2.5"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <circle cx="18" cy="5" r="3" />
+                <circle cx="6" cy="12" r="3" />
+                <circle cx="18" cy="19" r="3" />
+                <line x1="8.59" y1="13.51" x2="15.42" y2="17.49" />
+                <line x1="15.41" y1="6.51" x2="8.59" y2="10.49" />
+              </svg>
+            </span>
+            Share
+          </button>
+          <button
+            class="theme-toggle"
+            id="themeToggle"
+            aria-label="Toggle dark mode"
+          >
+            <span class="theme-icon">🌙</span>
+          </button>
+        </div>
+      </header>
+    </div>
+
+    <main class="app-layout">
+      <!-- LEFT PANEL -->
+      <section class="panel panel-left">
+        <div class="panel-block">
+          <label class="panel-label">Entries</label>
+          <textarea
+            id="nameInput"
+            class="name-textarea"
+            placeholder="Type or paste names here, one per line...
+Alice
+Bob
+Carol
+Dave"
+          ></textarea>
+          <div class="duplicate-warning" id="duplicateWarning"></div>
+          <label class="checkbox-row">
+            <input type="checkbox" id="noDuplicates" />
+            <span>No duplicates</span>
+          </label>
+          <div class="entry-meta">
+            <span id="entryCount">0 entries</span>
+          </div>
+          <button class="btn btn-primary" id="loadBtn">Load Names</button>
+        </div>
+      </section>
+
+      <!-- CENTER — WHEEL -->
+      <section class="panel panel-center">
+        <div class="wheel-wrap">
+          <div class="wheel-pointer" id="wheelPointer">▼</div>
+          <canvas id="wheelCanvas" width="480" height="480"></canvas>
+          <div class="winner-card" id="winnerCard">
+            <div class="winner-card-msg" id="winnerCardMsg">🎉 Winner!</div>
+            <div class="winner-card-name" id="winnerCardName"></div>
+            <div class="winner-card-actions">
+              <button class="btn btn-ghost" id="keepBtn">Keep on wheel</button>
+              <button class="btn btn-danger" id="removeBtn">
+                Remove winner
+              </button>
+            </div>
+          </div>
+        </div>
+        <button class="btn btn-spin" id="spinBtn">SPIN</button>
+      </section>
+
+      <!-- RIGHT PANEL -->
+      <section class="panel panel-right">
+        <label class="panel-label">Spin History</label>
+        <ul class="history-list" id="historyList">
+          <li class="history-empty">No spins yet...</li>
+        </ul>
+        <button class="btn btn-ghost btn-sm" id="clearHistory">
+          Clear history
+        </button>
+      </section>
+    </main>
+
+    <!-- Customise Modal -->
+    <div class="modal-overlay" id="customiseModal">
+      <div class="modal">
+        <div class="modal-header">
+          <h2 class="modal-title">Customise</h2>
+          <button class="modal-close" id="closeCustomise">✕</button>
+        </div>
+        <div class="modal-body">
+          <div class="custom-row">
+            <label class="small-label">Win message</label>
+            <input
+              type="text"
+              id="winMessage"
+              class="text-input"
+              placeholder="🎉 Winner!"
+              maxlength="40"
+            />
+          </div>
+          <div class="custom-row">
+            <label class="small-label">Logo (optional)</label>
+            <p class="embed-desc">Appears in the center of the wheel hub.</p>
+            <input
+              type="file"
+              id="logoUpload"
+              class="file-input"
+              accept="image/*"
+            />
+            <button class="btn btn-ghost btn-sm" id="clearLogo">
+              Remove logo
+            </button>
+          </div>
+          <div class="custom-row sounds-row">
+            <label class="small-label">Sounds</label>
+            <label class="toggle-switch">
+              <input type="checkbox" id="soundToggle" checked />
+              <span class="toggle-slider"></span>
+            </label>
+          </div>
+          <div class="custom-row">
+            <label class="small-label">Spin duration</label>
+            <div class="cap-row">
+              <input
+                type="range"
+                id="spinDuration"
+                min="2"
+                max="120"
+                value="5"
+                step="1"
+                class="range-input"
+              />
+              <span id="spinDurationLabel" class="small-label">5s</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Share Modal -->
+    <div class="modal-overlay" id="shareModal">
+      <div class="modal">
+        <div class="modal-header">
+          <h2 class="modal-title">Share / Embed</h2>
+          <button class="modal-close" id="closeShare">✕</button>
+        </div>
+        <div class="modal-body">
+          <p class="embed-desc">
+            Copy this code and paste it into any website to embed your wheel.
+          </p>
+          <textarea class="embed-code" id="embedCode" readonly></textarea>
+          <button class="btn btn-primary" id="copyEmbed">Copy code</button>
+        </div>
+      </div>
+    </div>
+
+    <canvas id="confettiCanvas"></canvas>
+
     <script type="module" src="/src/main.js"></script>
   </body>
 </html>
