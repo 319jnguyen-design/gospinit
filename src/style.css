@@ -340,6 +340,32 @@ body {
   cursor: pointer;
 }
 
+.entries-preview {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+.entries-preview-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  color: var(--text-primary);
+  padding: 5px 8px;
+  background: var(--bg-input);
+  border-radius: var(--radius-sm);
+}
+
+.entries-preview-num {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--accent);
+  min-width: 20px;
+}
+
 .entry-meta {
   display: flex;
   align-items: center;
@@ -532,6 +558,59 @@ body {
 /* ============================================
    WHEEL
    ============================================ */
+.wheel-hint {
+  margin-top: 12px;
+  font-size: 15px;
+  color: var(--text-muted);
+  font-weight: 600;
+  opacity: 0.8;
+  animation: hintPulse 2s ease-in-out infinite;
+}
+
+.wheel-warning {
+  margin-top: 10px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--danger);
+  text-align: center;
+  animation: popIn 0.3s ease;
+}
+
+.pointer-hint {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--accent);
+  letter-spacing: 0.5px;
+  white-space: nowrap;
+  display: block;
+  text-align: center;
+  margin-top: 2px;
+  opacity: 0.8;
+}
+
+@keyframes hintPulse {
+  0%,
+  100% {
+    opacity: 0.5;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+.wheel-title-display {
+  text-align: center;
+  margin-bottom: 8px;
+}
+
+.wheel-title-display p {
+  font-family: var(--font-display);
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--text-primary);
+  max-width: 600px;
+  word-break: break-word;
+}
+
 .wheel-wrap {
   position: relative;
   display: flex;
@@ -545,7 +624,7 @@ body {
   left: 50%;
   transform: translateX(-50%);
   font-size: 28px;
-  color: var(--accent);
+  color: var(--text-primary);
   z-index: 10;
   filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.2));
   line-height: 1;

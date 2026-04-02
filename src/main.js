@@ -14,15 +14,33 @@ let idleAnimFrame = null;
 
 // ── Wheel colors ───────────────────────────
 const WHEEL_COLORS_DEFAULT = [
-  '#c0392b','#d4652a','#e8a020','#c8c832',
-  '#7ab648','#4aaa6a','#5abcaa','#7ab8d8',
-  '#8090cc','#9a78b8','#c87898','#d4826a'
+  '#c0392b',
+  '#d4652a',
+  '#e8a020',
+  '#c8c832',
+  '#7ab648',
+  '#4aaa6a',
+  '#5abcaa',
+  '#7ab8d8',
+  '#8090cc',
+  '#9a78b8',
+  '#c87898',
+  '#d4826a'
 ];
 
 const WHEEL_COLORS_DARK = [
-  '#2dd4bf','#818cf8','#34d399','#60a5fa',
-  '#a78bfa','#f472b6','#fbbf24','#38bdf8',
-  '#fb923c','#4ade80','#e879f9','#f43f5e'
+  '#2dd4bf',
+  '#818cf8',
+  '#34d399',
+  '#60a5fa',
+  '#a78bfa',
+  '#f472b6',
+  '#fbbf24',
+  '#38bdf8',
+  '#fb923c',
+  '#4ade80',
+  '#e879f9',
+  '#f43f5e'
 ];
 
 function getWheelColors() {
@@ -30,37 +48,45 @@ function getWheelColors() {
 }
 
 // ── DOM refs ───────────────────────────────
-const canvas            = document.getElementById('wheelCanvas');
-canvas.width            = 600;
-canvas.height           = 600;
-const ctx               = canvas.getContext('2d');
-const spinDuration      = document.getElementById('spinDuration');
+const canvas = document.getElementById('wheelCanvas');
+canvas.width = 600;
+canvas.height = 600;
+const ctx = canvas.getContext('2d');
+const showTitle = document.getElementById('showTitle');
+const wheelTitle = document.getElementById('wheelTitle');
+const titleCharCount = document.getElementById('titleCharCount');
+const wheelTitleDisplay = document.getElementById('wheelTitleDisplay');
+const wheelTitleText = document.getElementById('wheelTitleText');
+const spinDuration = document.getElementById('spinDuration');
 const spinDurationLabel = document.getElementById('spinDurationLabel');
-const nameInput         = document.getElementById('nameInput');
-const loadBtn           = document.getElementById('loadBtn');
-const spinBtn           = document.getElementById('spinBtn');
-const entryCount        = document.getElementById('entryCount');
-const winnerCard        = document.getElementById('winnerCard');
-const winnerCardMsg     = document.getElementById('winnerCardMsg');
-const winnerCardName    = document.getElementById('winnerCardName');
-const wheelPointer      = document.getElementById('wheelPointer');
-const keepBtn           = document.getElementById('keepBtn');
-const removeBtn         = document.getElementById('removeBtn');
-const historyList       = document.getElementById('historyList');
-const clearHistory      = document.getElementById('clearHistory');
-const themeToggle       = document.getElementById('themeToggle');
-const soundToggle       = document.getElementById('soundToggle');
-const logoUpload        = document.getElementById('logoUpload');
-const clearLogo         = document.getElementById('clearLogo');
-const winMessage        = document.getElementById('winMessage');
-const embedCode         = document.getElementById('embedCode');
-const copyEmbed         = document.getElementById('copyEmbed');
-const noDuplicates      = document.getElementById('noDuplicates');
+const nameInput = document.getElementById('nameInput');
+const loadBtn = document.getElementById('loadBtn');
+const entryCount = document.getElementById('entryCount');
+const winnerCard = document.getElementById('winnerCard');
+const winnerCardMsg = document.getElementById('winnerCardMsg');
+const winnerCardName = document.getElementById('winnerCardName');
+const wheelPointer = document.getElementById('wheelPointer');
+const keepBtn = document.getElementById('keepBtn');
+const removeBtn = document.getElementById('removeBtn');
+const historyList = document.getElementById('historyList');
+const clearHistory = document.getElementById('clearHistory');
+const themeToggle = document.getElementById('themeToggle');
+const soundToggle = document.getElementById('soundToggle');
+const logoUpload = document.getElementById('logoUpload');
+const clearLogo = document.getElementById('clearLogo');
+const winMessage = document.getElementById('winMessage');
+const embedCode = document.getElementById('embedCode');
+const copyEmbed = document.getElementById('copyEmbed');
+const noDuplicates = document.getElementById('noDuplicates');
 
 // ── Sounds ─────────────────────────────────
-const spinSound  = new Audio('https://assets.mixkit.co/active_storage/sfx/1489/1489-preview.mp3');
-const cheerSound = new Audio('https://assets.mixkit.co/active_storage/sfx/2028/2028-preview.mp3');
-spinSound.preload  = 'auto';
+const spinSound = new Audio(
+  'https://assets.mixkit.co/active_storage/sfx/1489/1489-preview.mp3'
+);
+const cheerSound = new Audio(
+  'https://assets.mixkit.co/active_storage/sfx/2028/2028-preview.mp3'
+);
+spinSound.preload = 'auto';
 cheerSound.preload = 'auto';
 
 function playSound(audio) {
@@ -95,7 +121,10 @@ logoUpload.addEventListener('change', (e) => {
   const reader = new FileReader();
   reader.onload = (ev) => {
     const img = new Image();
-    img.onload = () => { logoImage = img; drawWheel(); };
+    img.onload = () => {
+      logoImage = img;
+      drawWheel();
+    };
     img.src = ev.target.result;
   };
   reader.readAsDataURL(file);
@@ -116,15 +145,15 @@ nameInput.addEventListener('keydown', (e) => {
 nameInput.addEventListener('input', () => {
   const raw = nameInput.value
     .split(/[\n,]+/)
-    .map(n => n.trim())
-    .filter(n => n.length > 0);
+    .map((n) => n.trim())
+    .filter((n) => n.length > 0);
 
   const count = raw.length;
   entryCount.textContent = `${count} ${count === 1 ? 'entry' : 'entries'}`;
 
   const seen = new Set();
   const dupes = new Set();
-  raw.forEach(n => {
+  raw.forEach((n) => {
     if (seen.has(n.toLowerCase())) dupes.add(n);
     else seen.add(n.toLowerCase());
   });
@@ -143,14 +172,14 @@ nameInput.addEventListener('input', () => {
 function loadNames() {
   const raw = nameInput.value
     .split(/[\n,]+/)
-    .map(n => n.trim())
-    .filter(n => n.length > 0);
+    .map((n) => n.trim())
+    .filter((n) => n.length > 0);
 
   let unique;
   if (noDuplicates.checked) {
     const seen = new Set();
     const dupes = new Set();
-    raw.forEach(n => {
+    raw.forEach((n) => {
       if (seen.has(n.toLowerCase())) dupes.add(n);
       else seen.add(n.toLowerCase());
     });
@@ -159,7 +188,9 @@ function loadNames() {
     if (warning) {
       if (dupes.size > 0) {
         warning.textContent = `⚠️ ${dupes.size} duplicate${dupes.size > 1 ? 's' : ''} removed.`;
-        setTimeout(() => { warning.textContent = ''; }, 3000);
+        setTimeout(() => {
+          warning.textContent = '';
+        }, 3000);
       } else {
         warning.textContent = '';
       }
@@ -178,6 +209,7 @@ function loadNames() {
   drawWheel();
   hideWinner();
   updateEmbedCode();
+  renderEntriesPreview(entries);
 }
 
 function updateEntryCount() {
@@ -209,7 +241,7 @@ function drawIdleWheel() {
   const size = canvas.width;
   const cx = size / 2;
   const cy = size / 2;
-  const r  = size / 2 - 4;
+  const r = size / 2 - 4;
   const colors = getWheelColors();
   const arc = (Math.PI * 2) / IDLE_SEGMENTS;
 
@@ -217,7 +249,7 @@ function drawIdleWheel() {
 
   for (let i = 0; i < IDLE_SEGMENTS; i++) {
     const start = currentAngle + i * arc;
-    const end   = start + arc;
+    const end = start + arc;
     const color = colors[i % colors.length];
 
     ctx.beginPath();
@@ -248,7 +280,7 @@ function drawWheel() {
   const size = canvas.width;
   const cx = size / 2;
   const cy = size / 2;
-  const r  = size / 2 - 4;
+  const r = size / 2 - 4;
 
   ctx.clearRect(0, 0, size, size);
 
@@ -261,7 +293,7 @@ function drawWheel() {
 
   entries.forEach((name, i) => {
     const start = currentAngle + i * arc;
-    const end   = start + arc;
+    const end = start + arc;
     const color = colors[i % colors.length];
 
     ctx.beginPath();
@@ -309,31 +341,76 @@ function drawHub(cx, cy) {
     ctx.beginPath();
     ctx.arc(cx, cy, hubR - 4, 0, Math.PI * 2);
     ctx.clip();
-    ctx.drawImage(logoImage, cx - logoSize / 2, cy - logoSize / 2, logoSize, logoSize);
+    ctx.drawImage(
+      logoImage,
+      cx - logoSize / 2,
+      cy - logoSize / 2,
+      logoSize,
+      logoSize
+    );
     ctx.restore();
   } else {
     ctx.beginPath();
     ctx.arc(cx, cy, hubR * 0.35, 0, Math.PI * 2);
     ctx.fillStyle = isDark ? '#2dd4bf' : '#d4924a';
     ctx.fill();
+
+    // Click to spin hint
+    if (!spinning) {
+      ctx.save();
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillStyle = isDark ? 'rgba(255,255,255,0.85)' : 'rgba(0,0,0,0.8)';
+      ctx.font = `600 ${hubR * 0.3}px Fredoka, sans-serif`;
+      ctx.fillText('click wheel', cx, cy - hubR * 0.18);
+      ctx.fillText('to spin', cx, cy + hubR * 0.18);
+      ctx.restore();
+    }
   }
 }
 
+function renderEntriesPreview(list) {
+  const preview = document.getElementById('entriesPreview');
+  if (!preview) return;
+  if (list.length === 0) {
+    preview.innerHTML = '';
+    return;
+  }
+  preview.innerHTML = list
+    .map(
+      (name, i) =>
+        `<div class="entries-preview-item">
+      <span class="entries-preview-num">#${i + 1}</span>
+      <span>${name}</span>
+    </div>`
+    )
+    .join('');
+}
+
 // ── Spin ───────────────────────────────────
-spinBtn.addEventListener('click', spin);
+canvas.addEventListener('click', spin);
+canvas.style.cursor = 'pointer';
 
 function spin() {
-  if (spinning || entries.length < 2) return;
+  if (spinning) return;
+  if (entries.length < 2) {
+    const w = document.getElementById('wheelWarning');
+    w.style.display = 'block';
+    setTimeout(() => {
+      w.style.display = 'none';
+    }, 2500);
+    return;
+  }
 
   spinning = true;
-  spinBtn.disabled = true;
+  canvas.style.cursor = 'not-allowed';
   hideWinner();
   playSound(spinSound);
 
-  const totalSpin  = Math.PI * 2 * (8 + Math.random() * 8);
-  const duration   = (parseInt(spinDuration.value) || 5) * 1000;
+  const totalSpin = Math.PI * 2 * (8 + Math.random() * 8);
+  const duration = (parseInt(spinDuration.value) || 5) * 1000;
   const startAngle = currentAngle;
-  const startTime  = performance.now();
+  const startTime = performance.now();
 
   function easeOut(t) {
     return 1 - Math.pow(1 - t, 4);
@@ -350,7 +427,7 @@ function spin() {
     } else {
       currentAngle = currentAngle % (Math.PI * 2);
       spinning = false;
-      spinBtn.disabled = false;
+      canvas.style.cursor = 'pointer';
       revealWinner();
     }
   }
@@ -361,7 +438,9 @@ function spin() {
 // ── Winner detection ───────────────────────
 function revealWinner() {
   const arc = (Math.PI * 2) / entries.length;
-  const normalized = ((Math.PI * 1.5) - currentAngle % (Math.PI * 2) + Math.PI * 2) % (Math.PI * 2);
+  const normalized =
+    (Math.PI * 1.5 - (currentAngle % (Math.PI * 2)) + Math.PI * 2) %
+    (Math.PI * 2);
   const idx = Math.floor(normalized / arc) % entries.length;
   winner = entries[idx];
 
@@ -388,13 +467,14 @@ keepBtn.addEventListener('click', () => hideWinner());
 
 removeBtn.addEventListener('click', () => {
   if (winner) {
-    entries = entries.filter(e => e !== winner);
+    entries = entries.filter((e) => e !== winner);
     updateEntryCount();
     drawWheel();
     updateEmbedCode();
     if (entries.length === 0) startIdleAnimation();
   }
   hideWinner();
+  renderEntriesPreview(entries);
 });
 
 // ── History ────────────────────────────────
@@ -410,9 +490,12 @@ function renderHistory() {
     historyList.innerHTML = '<li class="history-empty">No spins yet...</li>';
     return;
   }
-  historyList.innerHTML = spinHistory.map((name, i) =>
-    `<li><span style="color:var(--text-muted);font-size:12px;min-width:20px;">#${i + 1}</span>${name}</li>`
-  ).join('');
+  historyList.innerHTML = spinHistory
+    .map(
+      (name, i) =>
+        `<li><span style="color:var(--text-muted);font-size:12px;min-width:20px;">#${i + 1}</span>${name}</li>`
+    )
+    .join('');
 }
 
 clearHistory.addEventListener('click', () => {
@@ -422,9 +505,10 @@ clearHistory.addEventListener('click', () => {
 
 // ── Embed code ─────────────────────────────
 function updateEmbedCode() {
-  const params = entries.length > 0
-    ? '?entries=' + encodeURIComponent(entries.join(','))
-    : '';
+  const params =
+    entries.length > 0
+      ? '?entries=' + encodeURIComponent(entries.join(','))
+      : '';
   const url = `${window.location.origin}${params}`;
   embedCode.value = `<iframe src="${url}" width="600" height="700" frameborder="0" style="border-radius:16px;"></iframe>`;
 }
@@ -435,7 +519,9 @@ copyEmbed.addEventListener('click', () => {
     document.execCommand('copy');
   });
   copyEmbed.textContent = '✓ Copied!';
-  setTimeout(() => { copyEmbed.textContent = 'Copy code'; }, 2000);
+  setTimeout(() => {
+    copyEmbed.textContent = 'Copy code';
+  }, 2000);
 });
 
 // ── Sound toggle ───────────────────────────
@@ -448,7 +534,7 @@ function launchConfetti() {
   const canvas2 = document.getElementById('confettiCanvas');
   if (!canvas2) return;
   const ctx2 = canvas2.getContext('2d');
-  canvas2.width  = window.innerWidth;
+  canvas2.width = window.innerWidth;
   canvas2.height = window.innerHeight;
 
   const colors = getWheelColors();
@@ -460,7 +546,7 @@ function launchConfetti() {
     color: colors[Math.floor(Math.random() * colors.length)],
     tilt: Math.random() * 10 - 5,
     tiltSpeed: Math.random() * 0.1 + 0.05,
-    angle: 0,
+    angle: 0
   }));
 
   let frameCount = 0;
@@ -468,7 +554,7 @@ function launchConfetti() {
 
   function draw() {
     ctx2.clearRect(0, 0, canvas2.width, canvas2.height);
-    pieces.forEach(p => {
+    pieces.forEach((p) => {
       p.y += p.d + 1;
       p.x += Math.sin(p.angle) * 1.5;
       p.angle += 0.05;
@@ -494,7 +580,10 @@ function loadFromURL() {
   const params = new URLSearchParams(window.location.search);
   const e = params.get('entries');
   if (e) {
-    const names = decodeURIComponent(e).split(',').map(n => n.trim()).filter(Boolean);
+    const names = decodeURIComponent(e)
+      .split(',')
+      .map((n) => n.trim())
+      .filter(Boolean);
     if (names.length > 0) {
       entries = names.slice(0, 100);
       nameInput.value = entries.join('\n');
@@ -510,7 +599,23 @@ function loadFromURL() {
 
 // ── Modals ─────────────────────────────────
 const customiseModal = document.getElementById('customiseModal');
-const shareModal     = document.getElementById('shareModal');
+const shareModal = document.getElementById('shareModal');
+
+showTitle.addEventListener('change', () => {
+  const enabled = showTitle.checked;
+  wheelTitle.disabled = !enabled;
+  wheelTitle.style.opacity = enabled ? '1' : '0.5';
+  wheelTitleDisplay.style.display =
+    enabled && wheelTitle.value.trim() ? 'block' : 'none';
+});
+
+wheelTitle.addEventListener('input', () => {
+  const val = wheelTitle.value;
+  titleCharCount.textContent = `${val.length} / 100`;
+  wheelTitleText.textContent = val;
+  wheelTitleDisplay.style.display =
+    showTitle.checked && val.trim() ? 'block' : 'none';
+});
 
 document.getElementById('customiseBtn').addEventListener('click', () => {
   customiseModal.classList.add('open');
@@ -526,7 +631,7 @@ document.getElementById('closeShare').addEventListener('click', () => {
   shareModal.classList.remove('open');
 });
 
-[customiseModal, shareModal].forEach(modal => {
+[customiseModal, shareModal].forEach((modal) => {
   modal.addEventListener('click', (e) => {
     if (e.target === modal) modal.classList.remove('open');
   });

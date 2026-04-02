@@ -24,7 +24,7 @@
           ><span class="l-base">it</span>
         </div>
         <div class="header-actions">
-          <button class="header-btn" id="customiseBtn">Customise</button>
+          <button class="header-btn" id="customiseBtn">Customize</button>
           <button class="header-btn" id="shareBtn">
             <span class="header-btn-icon">
               <svg
@@ -72,6 +72,7 @@ Carol
 Dave"
           ></textarea>
           <div class="duplicate-warning" id="duplicateWarning"></div>
+          <div class="entries-preview" id="entriesPreview"></div>
           <label class="checkbox-row">
             <input type="checkbox" id="noDuplicates" />
             <span>No duplicates</span>
@@ -80,11 +81,21 @@ Dave"
             <span id="entryCount">0 entries</span>
           </div>
           <button class="btn btn-primary" id="loadBtn">Load Names</button>
+          <p class="wheel-warning" id="wheelWarning" style="display: none">
+            ⚠️ Add some names first!
+          </p>
         </div>
       </section>
 
       <!-- CENTER — WHEEL -->
       <section class="panel panel-center">
+        <div
+          class="wheel-title-display"
+          id="wheelTitleDisplay"
+          style="display: none"
+        >
+          <p id="wheelTitleText"></p>
+        </div>
         <div class="wheel-wrap">
           <div class="wheel-pointer" id="wheelPointer">▼</div>
           <canvas id="wheelCanvas" width="480" height="480"></canvas>
@@ -99,7 +110,6 @@ Dave"
             </div>
           </div>
         </div>
-        <button class="btn btn-spin" id="spinBtn">SPIN</button>
       </section>
 
       <!-- RIGHT PANEL -->
@@ -118,10 +128,35 @@ Dave"
     <div class="modal-overlay" id="customiseModal">
       <div class="modal">
         <div class="modal-header">
-          <h2 class="modal-title">Customise</h2>
+          <h2 class="modal-title">Customize</h2>
           <button class="modal-close" id="closeCustomise">✕</button>
         </div>
         <div class="modal-body">
+          <div class="custom-row">
+            <label class="small-label">Wheel title</label>
+            <div class="checkbox-row" style="margin-bottom: 6px">
+              <input type="checkbox" id="showTitle" />
+              <span>Show title above wheel</span>
+            </div>
+            <input
+              type="text"
+              id="wheelTitle"
+              class="text-input"
+              placeholder="e.g. Who answers next?"
+              maxlength="100"
+              disabled
+              style="opacity: 0.5"
+            />
+            <span
+              id="titleCharCount"
+              style="
+                font-size: 12px;
+                color: var(--text-muted);
+                text-align: right;
+              "
+              >0 / 100</span
+            >
+          </div>
           <div class="custom-row">
             <label class="small-label">Win message</label>
             <input
