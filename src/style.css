@@ -46,6 +46,8 @@
   --shadow: 0 2px 16px rgba(0, 0, 0, 0.06);
   --shadow-lg: 0 6px 32px rgba(0, 0, 0, 0.1);
 
+  --l-base: #ac6f6f;
+
   --w1: #c0392b;
   --w2: #d4652a;
   --w3: #e8a020;
@@ -153,7 +155,7 @@ body {
 }
 
 .l-base {
-  color: var(--text-primary);
+  color: var(--l-base);
 }
 
 .l-accent {
