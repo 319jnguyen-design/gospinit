@@ -1122,27 +1122,19 @@ body {
 
   .panel-right {
     position: static;
-    order: 3;
+    order: 4;
   }
 
   .panel-left {
-    order: 2;
+    order: 3;
   }
+
   .panel-center {
     order: 1;
   }
 
-  #wheelCanvas {
-    width: 320px !important;
-    height: 320px !important;
-  }
-
-  .btn-spin {
-    font-size: 17px;
-    padding: 14px 48px;
-  }
-
   .seo-content {
+    order: 5;
     padding: 36px 16px 48px;
   }
 
